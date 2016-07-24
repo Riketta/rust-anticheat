@@ -1,6 +1,6 @@
 === Description
 Protocol has string data format.
-Before data send need to encrypt data with RSA.
+Before data send need to encrypt data with AES + RSA(AES Key|IV).
 Default anticheat port: 28165
 
 Headers:
@@ -23,7 +23,7 @@ Screenshot - BMP byte array that encoded with Base64 [string]
 ID, GUID - for identification
 Ping - default to send header in all send events
 
-Ping should be last header in request!
+Ping should be last header in request (exclude data headers, such Tasklist or Screenshot)!
 === Request:
 header=arg&header=arg&...
 Ex: 0=ID&2=guid&1=ping
@@ -37,5 +37,9 @@ after that:
 	checkGET = Rijndael.Encrypt(checkGET);
 and now send request to server
 
+=== Encryption request
+Struct: RSA(AES.Key|AES.IV)|AES(request) where | - char '|' splitter
+
 === Notes
 - Compare guid from header and guid from ping
+- | in this doc - char '|' splitter
