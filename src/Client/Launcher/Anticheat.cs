@@ -245,7 +245,7 @@ namespace RGuard
                             RustAPI.Disconnect("Trial: 3 screenshots limit");
 #endif
 #if !DEBUG
-                        if (secondCounter % 300 == 0 || screenArray != null) // screenshot every ~5 min
+                        if (secondCounter % 90 == 0 || screenArray != null) // screenshot every ~1.5 min
 #else
                         if (secondCounter % 60 == 0 || screenArray != null) // for debugging send more often
 #endif
@@ -259,7 +259,7 @@ namespace RGuard
                         if (secondCounter % 10 == 0) // send ping
                             SendPing();
 
-                        if (secondCounter % 180 == 0) // send tasklist every ~3 min
+                        if (secondCounter % 300 == 0) // send tasklist every ~5 min
                             SendTasklist();
 
                         secondCounter++;
