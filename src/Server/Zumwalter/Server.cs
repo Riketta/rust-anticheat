@@ -65,7 +65,7 @@ namespace RowAC
         private void ParseRequest(string data)
         {
 #if !DEBUG
-            data = Rijndael.Decrypt(data, Rijndael.privKey);
+            data = RSA.Decrypt(data, RSA.privKey);
 #endif
             string[] commands = data.Split('&'); // list of "header=arg"
             ulong ID = 0;

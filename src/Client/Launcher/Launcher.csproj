@@ -197,7 +197,7 @@
     <Compile Include="Anticheat.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rijndael.cs" />
+    <Compile Include="RSA.cs" />
     <Compile Include="RustAPI.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

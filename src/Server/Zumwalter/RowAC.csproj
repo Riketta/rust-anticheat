@@ -114,7 +114,7 @@
     <Compile Include="Hooks.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="Loader.cs" />
-    <Compile Include="Rijndael.cs" />
+    <Compile Include="RSA.cs" />
     <Compile Include="RustAPI.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="RowAC.cs" />
