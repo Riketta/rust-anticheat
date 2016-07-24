@@ -1,0 +1,10 @@
+<project outputDir="..\confused\" baseDir="..\bin\server\" debug="true" xmlns="http://confuser.codeplex.com">
+  <module path="RowAC.dll">
+    <rule pattern="not full-name('RowAC.Loader') and not name('Init')">
+      <protection id="constants" />
+      <protection id="rename" />
+      <protection id="anti ildasm" />
+      <protection id="ctrl flow" />
+    </rule>
+  </module>
+</project>
