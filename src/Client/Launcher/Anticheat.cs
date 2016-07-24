@@ -147,10 +147,13 @@ namespace RowClient
                     + "&" + (uint)Header.Guid + "=" + Guid()
                     + "&" + (uint)Header.Ping + "=" + ping
                     + GET;
-                Log("[SendRequest] " + checkGET);
+
 #if !DEBUG
                 checkGET = Rijndael.Encrypt(checkGET, Rijndael.pubKey);
+#else
+                Log("[SendRequest] " + checkGET);
 #endif
+
                 var client = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 client.Connect(IPAddress.Parse(serverHost.Split(':')[0]), anticheatPort);
 
@@ -165,7 +168,6 @@ namespace RowClient
             catch (Exception ex) { ErrorLog(ex); }
         }
 
-#if DEBUG
         public static void Log(string text)
         {
             try
@@ -177,7 +179,6 @@ namespace RowClient
             }
             catch { }
         }
-#endif
 
         private bool IsRustFocused() // Для скриншотилки
         {
