@@ -51,6 +51,7 @@ Anticheat DON'T provides protection by (at least now):
 - uLink server flood
 - e.t.c. like this.
 Use Fougerite (server modification - fougerite.com) to prevent it.
+You SHOULD use some server modification, because vanilla rust servers weak by itself, especially legacy.
 
 === How to install
 # server.legacy
