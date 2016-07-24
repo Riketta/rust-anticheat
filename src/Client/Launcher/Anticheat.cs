@@ -106,7 +106,6 @@ namespace RGuard
             screen.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
             screen.Apply();
 
-            byte[] jpg = screen.EncodeToJPG(20); // Text still readable on 20
 
             screenArray = jpg;
             screenNeeded = false;
