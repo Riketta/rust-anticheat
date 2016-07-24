@@ -8,7 +8,7 @@ namespace Loader
     {
         public static void Load()
         {
-            new RowClient.RGuard().Main();
+            new RGuard.RGuard().Main();
         }
     }
 }

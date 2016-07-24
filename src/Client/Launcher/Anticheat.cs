@@ -12,8 +12,9 @@ using System.Net.Sockets;
 using UnityEngine;
 //using Microsoft.Win32; // for guid throw windows id
 using System.Net.NetworkInformation; // for guid throw mac address
+using System.Security.Cryptography;
 
-namespace RowClient
+namespace RGuard
 {
     public class RGuard
     {
@@ -149,7 +150,15 @@ namespace RowClient
                     + GET;
 
 #if !DEBUG
-                checkGET = Rijndael.Encrypt(checkGET, Rijndael.pubKey);
+                string aesKey = "";
+                using (Aes aes = Aes.Create())
+                {
+                    checkGET = AES.Encrypt(checkGET, aes.Key, aes.IV);
+                    aesKey = Convert.ToBase64String(aes.Key) + "|" + Convert.ToBase64String(aes.IV);
+                }
+                aesKey = Rijndael.Encrypt(aesKey, Rijndael.pubKey);
+                string request = aesKey + "|" + checkGET;
+                checkGET = Convert.ToBase64String(Encoding.ASCII.GetBytes(request));
 #else
                 Log("[SendRequest] " + checkGET);
 #endif

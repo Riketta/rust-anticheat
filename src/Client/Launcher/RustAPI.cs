@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RowClient
+namespace RGuard
 {
     public class RustAPI
     {

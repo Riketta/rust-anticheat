@@ -9,13 +9,13 @@ namespace RGuard
 {
     public class AES
     {
-        public static string Encrypt(string plainText, string base64Key, string base64IV)
+        public static string Encrypt(string plainText, byte[] key, byte[] iv)
         {
             byte[] encrypted;
             using (Aes aes = Aes.Create())
             {
-                aes.Key = Convert.FromBase64String(base64Key);
-                aes.IV = Convert.FromBase64String(base64IV);
+                aes.Key = key;
+                aes.IV = iv;
 
                 ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
 

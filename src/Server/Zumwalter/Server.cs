@@ -65,7 +65,13 @@ namespace RowAC
         private void ParseRequest(string data)
         {
 #if !DEBUG
-            data = RSA.Decrypt(data, RSA.privKey);
+            data = Encoding.ASCII.GetString(Convert.FromBase64String(data));
+            string[] split = data.Split('|'); // 0 - AES; 1 - data
+            string AESData = RSA.Decrypt(split[0], RSA.privKey);
+            string key = AESData.Split('|')[0];
+            string iv = AESData.Split('|')[1];
+            data = split[1]; // encryped client data
+            data = AES.Decrypt(data, key, iv);
 #endif
             string[] commands = data.Split('&'); // list of "header=arg"
             ulong ID = 0;
