@@ -1,5 +1,5 @@
-<project outputDir="..\bin\Confused" baseDir="..\bin" xmlns="http://confuser.codeplex.com">
-  <module path="ZumProtect.dll">
+<project outputDir="..\bin\Confused\" baseDir="..\bin\" xmlns="http://confuser.codeplex.com">
+  <module path="RGuard.dll">
     <rule pattern="not full-name('Loader.Program') and not name('Load')">
       <protection id="constants" />
       <protection id="rename" />
