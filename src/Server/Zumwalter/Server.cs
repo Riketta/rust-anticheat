@@ -149,7 +149,7 @@ namespace RowAC
             try
             {
                 RowAnticheat.Log(string.Format("[GUID] {0} New: {1}; Ping: {2}",
-                    steamID, guid, RowAnticheat.pingTimeTable[steamID]));
+                    steamID, guid, (RowAnticheat.pingTimeTable.ContainsKey(steamID) ? RowAnticheat.pingTimeTable[steamID] : -1)));
                 RowAnticheat.userGuids[steamID] = guid;
                 return guid;
             }

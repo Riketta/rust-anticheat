@@ -200,12 +200,11 @@ namespace RowAC
 #if DEBUG
                 Log(string.Format("[IsKickNeeded] Ping time: {0}; Time: {1}; Diff: {2}", 
                     pingTimeTable[ID], GetTimeInSeconds(), diff));
-
 #endif
                 if (diff > maxNoPingTime)
                     return true;
             }
-            catch (Exception ex) { Log(ex.ToString()); }
+            catch (Exception ex) { Log(ex.ToString()); return true; }
             return false;
         }
     }
