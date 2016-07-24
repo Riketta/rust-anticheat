@@ -1,4 +1,4 @@
-<project outputDir="..\bin\Confused\" baseDir="..\bin\" xmlns="http://confuser.codeplex.com">
+<project outputDir="..\bin\confused\" baseDir="..\bin\" debug="true" xmlns="http://confuser.codeplex.com">
   <module path="RGuard.dll">
     <rule pattern="not full-name('Loader.Program') and not name('Load')">
       <protection id="constants" />
