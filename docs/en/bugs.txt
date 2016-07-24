@@ -6,7 +6,7 @@ Known:
 - Receiver sometimes cutting request (mostly long requests cutteds)
 - Client sends information in same thread
 - If server launched on June 22 (for ex), and works for one day, it still write log to June 22 file
-
+- "Null"s in players tasklists
 
 Possible:
 - if join to server before full initialization (before "Server Initialized" message), then error spam may start.

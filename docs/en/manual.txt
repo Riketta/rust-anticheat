@@ -1,0 +1,67 @@
+### RowAC - Rust [legacy/alpha] client-side anticheat ###
+=== Modules
+RowAC - server anticheat part
+RGuard - client anticheat part
+
+=== FOR TESTERS
+# Tips
+Don't use it on your public servers! Anticheat very raw.
+Anticheat fully rewrited and needs huge testing before public release.
+Play on your personal server alone or with friends, who knows about testing.
+
+# What to test
+- Try to join, leave, join again to server and etc
+- Try to use some hacks
+- Try to crash client or server
+- Play on local and remote servers (127.0.0.1 and not)
+
+Report me all founded bugs and attach logs (client: logs in root game folder; server: server\ACLog\Logs\)
+I interested in stability and safety of your servers first of all.
+
+What untested by me at all:
+- Manipulations with join/leave to server
+- Speedhack/flyhack/teleporting protect
+- Compatibility with server mods
+- Not tested on pirate clients/servers
+- Playing with more than one client or player on server
+
+=== Features
+Anticheat can:
+- Kick people without anticheat
+- Take screenshots
+- Take players tasklists
+- Kick/ban players with speedhacks, teleports, flyhacks
+- Works with Steam version (legal)
+- Works with pirated version.
+- Works with server modifications (tested with Fougerite)
+
+Anticheat DON'T provides protection by (at least now):
+- hunger hack
+- radiation hack
+- calorie hack
+- server crash hack
+- uLink server flood
+- e.t.c. like this.
+Use Fougerite (server modification - fougerite.com) to prevent it.
+
+=== How to install
+# server.legacy
+Copy RowAC.dll (and RowAC.pdb, if you have) to rust_legacy\rust_server_Data\Managed\
+Copy RowPatcher.exe and Mono.Cecil.dll to rust_legacy\rust_server_Data\Managed\
+BACKUP YOUR CLEAR Assembly-CSharp.dll!
+Launch patcher (RowPatcher.exe), and do what it asks.
+Copy RowAC.ini to rust_legacy\ACLog\ (create, if it doesn't exist) and configure it how you like.
+Open port 28165 (at the moment you can't change it, sorry) in your firewall.
+Now you can start server.
+
+# client.legacy
+Copy RGuard.dll (and RGuard.pdb, if you have) to Rust\rust_Data\Managed\
+Copy RowPatcher.exe and Mono.Cecil.dll to Rust\rust_Data\Managed\
+BACKUP YOUR CLEAR Assembly-CSharp.dll!
+Launch patcher (RowPatcher.exe), and do what it asks.
+Now you can play.
+
+
+
+=== Ask me: rowneg@bk.ru; skype: azzzmodan; riketta.com
+If you need help, report bug or want some features.
