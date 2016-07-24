@@ -18,12 +18,20 @@ Play on your personal server alone or with friends, who knows about testing.
 Report me all founded bugs and attach logs (client: logs in root game folder; server: server\ACLog\Logs\)
 I interested in stability and safety of your servers first of all.
 
-What untested by me at all:
+# What untested by me at all:
 - Manipulations with join/leave to server
 - Speedhack/flyhack/teleporting protect
 - Compatibility with server mods
 - Not tested on pirate clients/servers
 - Playing with more than one client or player on server
+
+# What you should avoid and shouldn't afraid:
+- Config system. I'll rewrite it soon, because it's trash
+- Logging system. Same.
+- Problems with automatic punishes for speedhacking/etc - not tested and it needs some improvements
+
+# Also - performance of client/server
+Tell me, if you have problems with it
 
 === Features
 Anticheat can:
@@ -61,7 +69,11 @@ BACKUP YOUR CLEAR Assembly-CSharp.dll!
 Launch patcher (RowPatcher.exe), and do what it asks.
 Now you can play.
 
-
+=== Timings
+Ping - every ~10 sec
+No anticheat kicking - ~60 sec
+Screenshots - every ~90 sec
+Tasklist - every ~300 sec
 
 === Ask me: rowneg@bk.ru; skype: azzzmodan; riketta.com
 If you need help, report bug or want some features.
