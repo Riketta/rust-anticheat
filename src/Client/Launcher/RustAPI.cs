@@ -56,18 +56,28 @@ namespace RowClient
             //return PlayerClient.GetLocalPlayer().netPlayer.port;
         }
 
-        public static string GetUsedName()
+        public static PlayerClient GetPlayer()
+        {
+            return PlayerClient.GetLocalPlayer();
+        }
+
+        public static string GetUserName()
         {
             if (PlayerClient.GetLocalPlayer() != null)
                 return PlayerClient.GetLocalPlayer().userName;
             return null;
         }
 
-        public static ulong GetUsedID()
+        public static ulong GetUserID()
         {
             if (PlayerClient.GetLocalPlayer() != null)
                 return PlayerClient.GetLocalPlayer().userID;
             return 0;
+        }
+
+        public static void AddLateUpdate(MonoBehaviour mb, int updateOrder, UpdateManager.OnUpdate func)
+        {
+            UpdateManager.AddLateUpdate(mb, updateOrder, func);
         }
 #endif
 

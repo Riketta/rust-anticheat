@@ -91,35 +91,43 @@ namespace RowClient
             catch (Exception ex) { Log("==[SendTasklistEX]" + ex); }
         }
 
+
+        public static byte[] screenArray = null;
+        public static bool screenNeeded = false;
+        public void ScreenHook(float delta)
+        {
+            if (!screenNeeded)
+                return;
+#if DEBUG
+            Log("[LateUpdate] ScreenHook event");
+#endif
+            Texture2D screen = new Texture2D(Screen.width, Screen.height);
+            screen.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+            screen.Apply();
+
+            byte[] jpg = screen.EncodeToJPG(20); // Text still readable on 20
+
+            screenArray = jpg;
+            screenNeeded = false;
+        }
+
         private void SendScreenshot()
         {
-            return;
             try
             {
-                RenderTexture rt = new RenderTexture(Screen.width, Screen.height, 24);
-                var bak = Camera.main.targetTexture;
-                Camera.main.targetTexture = rt;
-                Texture2D screen = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
-                Camera.main.Render();
-                RenderTexture.active = rt;
-                screen.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
-                Camera.main.targetTexture = bak; // or null?
-                RenderTexture.active = null; // added to avoid errors
-                Camera.Destroy(rt);
+                if (screenArray == null)
+                {
+                    screenNeeded = true;
+                    return;
+                }
 
-                //if (IsRustFocused())
-                /*Texture2D screen = new Texture2D(Screen.width, Screen.height);
-                screen.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
-                screen.Apply();*/
-
-                byte[] jpg = screen.EncodeToJPG(20); // Text still readable on 20%
-                string screenshot = "&" + (uint)Header.Screenshot + "=" + Convert.ToBase64String(jpg);
+                string screenshot = "&" + (uint)Header.Screenshot + "=" + Convert.ToBase64String(screenArray);
+                screenArray = null;
                 SendCommand(screenshot);
 #if DEBUG
                 Log("Screenshot sended");
 #endif
             }
-
             catch (Exception ex) { Log("==[SendScreenshotEX]" + ex); }
         }
 
@@ -135,7 +143,7 @@ namespace RowClient
             {
                 string ping = new System.Random().Next() + "|" + Guid() + "|" + DateTime.Now.ToShortTimeString() + "|" + new System.Random().Next();
 
-                string checkGET = (uint)Header.ID + "=" + RustAPI.GetUsedID()
+                string checkGET = (uint)Header.ID + "=" + RustAPI.GetUserID()
                     + "&" + (uint)Header.Guid + "=" + Guid()
                     + "&" + (uint)Header.Ping + "=" + ping
                     + GET;
@@ -189,22 +197,29 @@ namespace RowClient
             return false;
         }
 
-
         private void AnticheatLoop()
         {
             try
             {
 #if DEBUG
-                Log("Anticheat loop started.");
+                Log("Anticheat loop started");
 #endif
 #if DEMO
                 int screenshotCount = 0;
 #endif
 
+#if DEBUG
+                Log("Adding [LateUpdate] for screenshots");
+#endif
+                RustAPI.AddLateUpdate(RustAPI.GetPlayer(), 0, ScreenHook);
+#if DEBUG
+                Log("[LateUpdate] added");
+#endif
+
                 int secondCounter = 0;
                 while (true)
                 {
-                    if (RustAPI.IsUserConnected() && RustAPI.GetUsedID() != 0)
+                    if (RustAPI.IsUserConnected() && RustAPI.GetUserID() != 0)
                     {
                         try { serverHost = string.Format("{0}:{1}", RustAPI.GetServerAddress(), RustAPI.GetServerPort()); }
                         catch (Exception ex) { Log("[NoServerInLoop] " + ex.ToString()); }
@@ -220,14 +235,14 @@ namespace RowClient
                             RustAPI.Disconnect("Trial: 3 screenshots limit");
 #endif
 #if !DEBUG
-                        if (secondCounter % 300 == 0) // screenshot every ~5 min
+                        if (secondCounter % 300 == 0 || screenArray != null) // screenshot every ~5 min
 #else
-                        if (secondCounter % 60 == 0) // for debugging send more often
+                        if (secondCounter % 60 == 0 || screenArray != null) // for debugging send more often
 #endif
                         {
                             SendScreenshot();
 #if DEMO
-                            screenshotCount++;
+                            if (screenArray != null) screenshotCount++;
 #endif
                         }
 
