@@ -38,7 +38,7 @@ after that:
 and now send request to server
 
 === Encryption request
-Struct: RSA(AES.Key|AES.IV)|AES(request) where | - char '|' splitter
+Struct: RSA(base64(AES.Key)|base64(AES.IV))|AES(request) where | - char '|' splitter
 
 === Notes
 - Compare guid from header and guid from ping
