@@ -39,6 +39,8 @@ namespace RowAC
         {
             try
             {
+                Log("[RowAC] loading...");
+                
                 if (!Directory.Exists(anticheatLogFolder))
                     Directory.CreateDirectory(anticheatLogFolder);
                 if (!Directory.Exists(screenshotsFolderPath))
@@ -54,7 +56,7 @@ namespace RowAC
                 LoadConfig();
                 if (!enabled)
                 {
-                    Log("[RowAC] anticheat disabled!");
+                    Log("Anticheat disabled!");
                     return;
                 }
 
@@ -70,7 +72,7 @@ namespace RowAC
                 ServerListener = new Thread(server.StartListening);
                 ServerListener.Start();
 
-                UnityEngine.Debug.Log("[RowAC] loaded! Version: " + 
+                UnityEngine.Debug.Log("RowAC loaded! Version: " + 
                     System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
             }
             catch (Exception ex) { Log(ex.ToString()); }
@@ -141,7 +143,7 @@ namespace RowAC
         {
             try
             {
-                message = "[" + DateTime.Now.ToString("HH:mm:ss") + "] " + message;
+                message = "[RowAC][" + DateTime.Now.ToString("HH:mm:ss") + "] " + message;
                 if (alert)
                 {
                     UnityEngine.Debug.Log(message);

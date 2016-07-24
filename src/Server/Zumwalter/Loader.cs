@@ -10,7 +10,6 @@ namespace RowAC
     {
         public static void Init()
         {
-            UnityEngine.Debug.Log("[RowAC] loading...");
             RowAnticheat.Init();
         }
     }
