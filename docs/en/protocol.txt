@@ -1,0 +1,41 @@
+=== Description
+Protocol has string data format.
+Before data send need to encrypt data with RSA.
+Default anticheat port: 28165
+
+Headers:
+enum Header : uint
+{
+	ID = 0,
+	Ping = 1,
+	Guid = 2,
+	Tasklist = 3,
+	Screenshot = 4
+}
+
+ID - userID [ulong]
+Ping - user ping with struct: [rand()|GUID|ShortTime|rand()] [string]
+Guid - generated guid [string]
+Tasklist - encoded to Base64 tasklist [string]
+Screenshot - BMP byte array that encoded with Base64 [string]
+
+=== Compulsory headers:
+ID, GUID - for identification
+Ping - default to send header in all send events
+
+Ping should be last header in request!
+=== Request:
+header=arg&header=arg&...
+Ex: 0=ID&2=guid&1=ping
+	0=007&2=G-0000-UID-1234&1=5887|G-0000-UID-1234|3:02 AM|7894
+string checkGET = (uint)Headers.ID + "=" + SteamID
+	+ "&" + (uint)Headers.Guid + "=" + Guid() 
+	+ "&" + (uint)Headers.Ping + "=" + ping 
+	+ GET;
+	
+after that: 
+	checkGET = Rijndael.Encrypt(checkGET);
+and now send request to server
+
+=== Notes
+- Compare guid from header and guid from ping

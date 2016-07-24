@@ -1,0 +1,10 @@
+<project outputDir="..\bin\Confused" baseDir="..\bin" xmlns="http://confuser.codeplex.com">
+  <module path="ZumProtect.dll">
+    <rule pattern="not full-name('Loader.Program') and not name('Load')">
+      <protection id="constants" />
+      <protection id="rename" />
+      <protection id="anti ildasm" />
+      <protection id="ctrl flow" />
+    </rule>
+  </module>
+</project>

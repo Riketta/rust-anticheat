@@ -1,0 +1,3 @@
+Assembly-CSharp.dll:
+  Set as public: NetUser internal bool OnConnectionCanceled(NetError error);
+  Add call to hook function from: ServerManagement public Character SpawnPlayer(PlayerClient playerFor, bool useCamp, Avatar avatar = null);

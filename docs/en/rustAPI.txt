@@ -1,0 +1,13 @@
+=== Used classes and fields
+
+=== Legacy client:
+Facepunch.Network.dll
+	- Network.Net
+	- Network.Client
+
+Assembly-CSharp.dll
+	- Network.Implementation.Raknet
+	
+Assembly-CSharp-firstpass.dll
+	- Network.Client
+		Network.Net.cl - Client object of your player
