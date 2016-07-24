@@ -163,8 +163,13 @@ namespace RGuard
                 Log("[SendRequest] " + checkGET);
 #endif
 
+                string strHost = serverHost.Split(':')[0];
+                IPAddress host = null;
+                IPAddress.TryParse(strHost, out host);
+                if (host == null)
+                    host = Dns.GetHostEntry(strHost).AddressList[0];
                 var client = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                client.Connect(IPAddress.Parse(serverHost.Split(':')[0]), anticheatPort);
+                client.Connect(host, anticheatPort);
 
                 byte[] byteData = Encoding.ASCII.GetBytes(checkGET);
                 client.Send(byteData, 0, byteData.Length, 0);
