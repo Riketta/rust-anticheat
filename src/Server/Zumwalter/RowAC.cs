@@ -74,6 +74,13 @@ namespace RowAC
             catch (Exception ex) { R.LogEx("Init", ex); }
         }
 
+        private static void Terminate()
+        {
+            if (Anticheat != null) Anticheat.Abort();
+            if (AnticheatRemote != null) AnticheatRemote.Abort();
+            if (ServerListener != null) ServerListener.Abort();
+        }
+
         public static T LoadConfig<T>(string file)
         {
             try
@@ -112,7 +119,6 @@ namespace RowAC
                 }
                 catch (Exception ex) { R.LogEx("LoopCrash", ex); }
             }
-
         }
 
         internal static int GetTimeInSeconds()
