@@ -55,20 +55,20 @@ You SHOULD use some server modification, because vanilla rust servers weak by it
 
 === How to install
 # server.legacy
-Copy RowAC.dll (and RowAC.pdb, if you have) to rust_legacy\rust_server_Data\Managed\
-Copy RowPatcher.exe and Mono.Cecil.dll to rust_legacy\rust_server_Data\Managed\
-BACKUP YOUR CLEAR Assembly-CSharp.dll!
-Launch patcher (RowPatcher.exe), and do what it asks.
-Copy RowAC.ini to rust_legacy\ACLog\ (create, if it doesn't exist) and configure it how you like.
-Open port 28165 (at the moment you can't change it, sorry) in your firewall.
-Now you can start server.
+1. Copy RowAC.dll (and RowAC.pdb, if you have) to rust_legacy\rust_server_Data\Managed\
+2. Copy RowPatcher.exe and Mono.Cecil.dll to rust_legacy\rust_server_Data\Managed\
+3. BACKUP YOUR CLEAR Assembly-CSharp.dll!
+4. [DON'T PATCH, IF YOUR LIBs ALREADY PATCHED!!!] Launch patcher (RowPatcher.exe), and do what it asks.
+5. Copy RowAC.ini to rust_legacy\ACLog\ (create, if it doesn't exist) and configure it how you like.
+6. Open port 28165 (at the moment you can't change it, sorry) in your firewall.
+7. Now you can start server.
 
 # client.legacy
-Copy RGuard.dll (and RGuard.pdb, if you have) to Rust\rust_Data\Managed\
-Copy RowPatcher.exe and Mono.Cecil.dll to Rust\rust_Data\Managed\
-BACKUP YOUR CLEAR Assembly-CSharp.dll!
-Launch patcher (RowPatcher.exe), and do what it asks.
-Now you can play.
+1. Copy RGuard.dll (and RGuard.pdb, if you have) to Rust\rust_Data\Managed\
+2. Copy RowPatcher.exe and Mono.Cecil.dll to Rust\rust_Data\Managed\
+3. BACKUP YOUR CLEAR Assembly-CSharp.dll!
+4. [DON'T PATCH, IF YOUR LIBs ALREADY PATCHED!!!] Launch patcher (RowPatcher.exe), and do what it asks.
+5. Now you can play.
 
 === Timings
 Ping - every ~10 sec
