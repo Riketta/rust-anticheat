@@ -17,19 +17,21 @@ namespace RowAC
 
         private static StreamWriter writer;
 
-        private static bool enabled = true;
-        private static bool debug = false;
-        private static int minConnectionTime = 60;
-        private static int maxNoPingTime = 30;
-        private static int threadSleepTime = 5;
+        class Config
+        {
+            public bool enabled = true;
+            public bool debug = false;
+            public int minConnectionTime = 60;
+            public int maxNoPingTime = 30;
+            public int threadSleepTime = 5;
+        }
+        private static Config rconf = new Config();
 
-        internal static string anticheatLogFolder = @"ACLog\";
-        internal static string screenshotsFolderPath = anticheatLogFolder + @"Screenshots\";
-        internal static string taskListsFolderPath = anticheatLogFolder + @"Tasklists\";
-        internal static string logsFolderPath = anticheatLogFolder + @"Logs\";
+        internal static string rowacFolder = @"rowac\";
+        internal static string screenshotsFolderPath = rowacFolder + @"Screenshots\";
+        internal static string taskListsFolderPath = rowacFolder + @"Tasklists\";
+        internal static string logsFolderPath = rowacFolder + @"Logs\";
         internal static string configPath = "";
-
-        internal static RowAC.IniFile ini = null;
 
         internal static Thread Anticheat;
         internal static Thread AnticheatRemote;
@@ -41,8 +43,8 @@ namespace RowAC
             {
                 Log("[RowAC] loading...");
                 
-                if (!Directory.Exists(anticheatLogFolder))
-                    Directory.CreateDirectory(anticheatLogFolder);
+                if (!Directory.Exists(rowacFolder))
+                    Directory.CreateDirectory(rowacFolder);
                 if (!Directory.Exists(screenshotsFolderPath))
                     Directory.CreateDirectory(screenshotsFolderPath);
                 if (!Directory.Exists(taskListsFolderPath))
@@ -53,8 +55,8 @@ namespace RowAC
                 writer = new StreamWriter(Path.Combine(logsFolderPath, "rowac_" + DateTime.Now.ToString("dd_MM_yyyy") + ".txt"), true);
                 writer.AutoFlush = true;
 
-                LoadConfig();
-                if (!enabled)
+                rconf = LoadConfig<Config>(Path.Combine(RowAnticheat.rowacFolder, "rowac.json"));
+                if (rconf == null || !rconf.enabled)
                 {
                     Log("Anticheat disabled!");
                     return;
@@ -78,42 +80,21 @@ namespace RowAC
             catch (Exception ex) { Log(ex.ToString()); }
         }
 
-        private static void LoadConfig()
+        public static T LoadConfig<T>(string file)
         {
-            Log("Config Loading...");
             try
             {
-                configPath = Path.Combine(anticheatLogFolder, "RowAC.ini");
-                Log("ConfigPath: " + configPath);
-                ini = new RowAC.IniFile(configPath);
-
-                if (!File.Exists(configPath))
-                {
-                    Log("RowAC.ini does not exist! Default created");
-
-                    ini.Write("Enabled", (enabled ? 1 : 0).ToString(), "RowAC");
-                    ini.Write("Debug", (debug ? 1 : 0).ToString(), "RowAC");
-                    ini.Write("MinConnectionTime", minConnectionTime.ToString(), "RowAC");
-                    ini.Write("MaxNoPingTime", maxNoPingTime.ToString(), "RowAC");
-                    ini.Write("ThreadSleepTime", threadSleepTime.ToString(), "RowAC");
-                }
+                if (File.Exists(file))
+                    return RConfig<T>.ReadFromFile(file);
                 else
                 {
-                    enabled = (int.Parse(ini.Read("Enabled", "RowAC")) == 1 ? true : false);
-                    debug = (int.Parse(ini.Read("Debug", "RowAC")) == 1 ? true : false);
-                    minConnectionTime = int.Parse(ini.Read("MinConnectionTime", "RowAC"));
-                    maxNoPingTime = int.Parse(ini.Read("MaxNoPingTime", "RowAC"));
-                    threadSleepTime = int.Parse(ini.Read("ThreadSleepTime", "RowAC"));
+                    T def = (T)Activator.CreateInstance(typeof(T));
+                    RConfig<T>.WriteToFile(def, file);
+                    return def;
                 }
-
-                Log("[Config] ===============");
-                Log("MinConnectTime: " + minConnectionTime);
-                Log("MaxNoPingTime: " + maxNoPingTime);
-                Log("ThreadSleepTime: " + threadSleepTime);
-                Log("[Config] =========== END");
             }
-            catch (Exception ex) { Log("[Config] " + ex); }
-            Log("Config Loaded!", true);
+            catch (Exception ex) { Log("==[LoadConfigEX] " + ex.ToString()); }
+            return default(T);
         }
 
         private static void AntiCheat()
@@ -128,11 +109,11 @@ namespace RowAC
                     foreach (var p in connections)
                     {
                         var player = RustAPI.GetUser(p);
-                        if (RustAPI.IsUserConnected(player) && RustAPI.GetUserConnectionTime(player) >= minConnectionTime)
+                        if (RustAPI.IsUserConnected(player) && RustAPI.GetUserConnectionTime(player) >= rconf.minConnectionTime)
                             CheckPlayer(player);
                     }
 
-                    Thread.Sleep(threadSleepTime * 1000);
+                    Thread.Sleep(rconf.threadSleepTime * 1000);
                 }
                 catch (Exception ex) { Log("[LOOP_CRASH] " + ex); }
             }
@@ -201,7 +182,7 @@ namespace RowAC
                 Log(string.Format("[IsKickNeeded] Ping time: {0}; Time: {1}; Diff: {2}", 
                     pingTimeTable[ID], GetTimeInSeconds(), diff));
 #endif
-                if (diff > maxNoPingTime)
+                if (diff > rconf.maxNoPingTime)
                     return true;
             }
             catch (Exception ex) { Log(ex.ToString()); return true; }

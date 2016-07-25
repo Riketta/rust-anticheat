@@ -113,8 +113,17 @@
     <Compile Include="AES.cs" />
     <Compile Include="Anticheat.cs" />
     <Compile Include="Hooks.cs" />
-    <Compile Include="IniFile.cs" />
+    <Compile Include="LitJSON\IJsonWrapper.cs" />
+    <Compile Include="LitJSON\JsonData.cs" />
+    <Compile Include="LitJSON\JsonException.cs" />
+    <Compile Include="LitJSON\JsonMapper.cs" />
+    <Compile Include="LitJSON\JsonMockWrapper.cs" />
+    <Compile Include="LitJSON\JsonReader.cs" />
+    <Compile Include="LitJSON\JsonWriter.cs" />
+    <Compile Include="LitJSON\Lexer.cs" />
+    <Compile Include="LitJSON\ParserToken.cs" />
     <Compile Include="Loader.cs" />
+    <Compile Include="RConfig.cs" />
     <Compile Include="RSA.cs" />
     <Compile Include="RustAPI.cs" />
     <Compile Include="Server.cs" />
@@ -122,9 +131,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="RowAC.ini">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
