@@ -10,7 +10,7 @@ namespace RowAC
     {
         public static void Init()
         {
-            RowAnticheat.Init();
+            RowacCore.Init();
         }
     }
 }

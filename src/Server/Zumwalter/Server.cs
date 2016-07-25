@@ -11,14 +11,11 @@ namespace RowAC
 {
     internal class Listener
     {
-        void Log(string message)
-        {
-            RowAnticheat.Log("[Listener] " + message);
-        }
-
+        RLog R = null;
         public void StartListening()
         {
-            Log("Starting TCP listener...");
+            R = RowacCore.R;
+            R.Log("[Listener] Starting TCP listener...");
             TcpListener listener = new TcpListener(IPAddress.Any, 28165);
             listener.Start();
 
@@ -28,7 +25,7 @@ namespace RowAC
                 {
                     var client = listener.AcceptSocket();
 #if DEBUG
-                    Log("Connection accepted.");
+                    R.Log("[Listener] Connection accepted.");
 #endif
 
                     var childSocketThread = new Thread(() =>
@@ -41,13 +38,13 @@ namespace RowAC
 
                         string request = Encoding.ASCII.GetString(data, 0, size);
 #if DEBUG
-                        Log(string.Format("Received: [{0}]: {1}", size, request));
+                        R.Log(string.Format("Received [{0}]: {1}", size, request));
 #endif
                         ParseRequest(request);
                     });
                     childSocketThread.Start();
                 }
-                catch (Exception ex) { Log(ex.ToString()); }
+                catch (Exception ex) { R.LogEx("ListenerLoop", ex); }
             }
         }
 
@@ -82,7 +79,7 @@ namespace RowAC
                 try
                 {
 #if DEBUG
-                    Log(command);
+                    R.Log(command);
 #endif
                     string[] segment = command.Split(new char[] { '=' }, 2);
                     if (segment.Length != 2) // header and argument
@@ -113,12 +110,12 @@ namespace RowAC
                             break;
 
                         default:
-                            RowAnticheat.Log(string.Format("[Header] Not valid header: {0}. Data: {1}", header, argument));
+                            R.Log(string.Format("[Header] Not valid header: {0}. Data: {1}", header, argument));
                             break;
                     }
 
                 }
-                catch (Exception ex) { Log(string.Format("==[ParseRequestEX] \"{0}\": {1}", command, ex.ToString())); }
+                catch (Exception ex) { R.LogEx("ParseRequest", string.Format("\"{0}\"; {1}", command, ex.ToString())); }
             }
         }
         
@@ -127,9 +124,8 @@ namespace RowAC
         {
             try
             {
-                RowAnticheat.Log("Ping: " + ping);
 #if DEBUG
-                Log(ping);
+                R.Log("Ping: " + ping);
 #endif
 
                 string[] data = ping.Split('|'); // [1] - GUID; [2] - ShortTime
@@ -138,22 +134,22 @@ namespace RowAC
                 //if (RowAnticheat.userGuids[steamID] == guid)
                 //RustAPI.KickUser(RustAPI.FindByUserID(steamID), NetError.ApprovalDenied, true);
 
-                RowAnticheat.pingTimeTable[steamID] = RowAnticheat.GetTimeInSeconds();
-                RowAnticheat.Log(string.Format("[Ping] {0} ({1}) - {2}", steamID, guid, RowAnticheat.pingTimeTable[steamID]));
+                RowacCore.pingTimeTable[steamID] = RowacCore.GetTimeInSeconds();
+                R.Log(string.Format("[Ping] {0} ({1}) - {2}", steamID, guid, RowacCore.pingTimeTable[steamID]));
             }
-            catch (Exception ex) { Log(string.Format("==[PingEX] {0}", ex.ToString())); }
+            catch (Exception ex) { R.LogEx("Ping", ex); }
         }
 
         private string ParseGuid(string guid, ulong steamID)
         {
             try
             {
-                RowAnticheat.Log(string.Format("[GUID] {0} New: {1}; Ping: {2}",
-                    steamID, guid, (RowAnticheat.pingTimeTable.ContainsKey(steamID) ? RowAnticheat.pingTimeTable[steamID] : -1)));
-                RowAnticheat.userGuids[steamID] = guid;
+                R.Log(string.Format("[GUID] {0} New: {1}; Ping: {2}",
+                    steamID, guid, (RowacCore.pingTimeTable.ContainsKey(steamID) ? RowacCore.pingTimeTable[steamID] : -1)));
+                RowacCore.userGuids[steamID] = guid;
                 return guid;
             }
-            catch (Exception ex) { Log(string.Format("==[GuidEX] {0}", ex.ToString())); }
+            catch (Exception ex) { R.LogEx("Guid", ex); }
             return null;
         }
 
@@ -162,7 +158,7 @@ namespace RowAC
             try
             {
                 byte[] image = Convert.FromBase64String(imageBase64);
-                string CurrentUserACFolder = Path.Combine(RowAnticheat.screenshotsFolderPath, steamID.ToString());
+                string CurrentUserACFolder = Path.Combine(RowacCore.screenshotsFolderPath, steamID.ToString());
 
                 if (!Directory.Exists(CurrentUserACFolder))
                     Directory.CreateDirectory(CurrentUserACFolder);
@@ -171,7 +167,7 @@ namespace RowAC
                 using (BinaryWriter writer = new BinaryWriter(stream))
                     writer.Write(image);
             }
-            catch (Exception ex) { Log(string.Format("==[ScreenshotEX] {0}", ex.ToString())); }
+            catch (Exception ex) { R.LogEx("Screenshot", ex); }
         }
 
         private void ParseTasklist(string base64ProcessList, ulong steamID)
@@ -179,7 +175,7 @@ namespace RowAC
             try
             {
                 // TODO: better to save with guid?
-                string CurrentUserACFolder = Path.Combine(RowAnticheat.taskListsFolderPath, steamID.ToString());
+                string CurrentUserACFolder = Path.Combine(RowacCore.taskListsFolderPath, steamID.ToString());
 
                 if (!Directory.Exists(CurrentUserACFolder))
                     Directory.CreateDirectory(CurrentUserACFolder);
@@ -188,7 +184,7 @@ namespace RowAC
                                                                 DateTime.Now.ToString("yyyy MM dd HH-mm-ss") + ".txt")))
                     writer.WriteLine(Encoding.UTF8.GetString(Convert.FromBase64String(base64ProcessList)));
             }
-            catch (Exception ex) { Log(string.Format("==[TasklistEX] {0}", ex.ToString())); }
+            catch (Exception ex) { R.LogEx("Tasklist", ex); }
         }
     }
 }

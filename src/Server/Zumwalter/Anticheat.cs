@@ -30,29 +30,23 @@ namespace RowAC
         }
         Config aconf = new Config();
 
-        private Timer takeCoordsTimer;
-
-        private string consolePrefix = "[AC]";
+        Timer takeCoordsTimer;
+        RLog R = new RLog("Anticheat", RowacCore.logsFolderPath);
 
         internal void Initialize()
         {
             System.Threading.Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Highest;
-            Log("RowAC is loading...");
+            R.Log("[Anticheat] is loading...");
 
-            aconf = RowAnticheat.LoadConfig<Config>(Path.Combine(RowAnticheat.rowacFolder, "anticheat.json"));
+            aconf = RowacCore.LoadConfig<Config>(Path.Combine(RowacCore.rowacFolder, "anticheat.json"));
             if (aconf != null && aconf.enabled)
             {
                 takeCoordsTimer = new Timer(aconf.checkInterval * 1000);
                 takeCoordsTimer.Elapsed += takeCoordsEvent;
                 takeCoordsTimer.Start();
-                Log("RowAC loaded!");
+                R.Log("[Anticheat] loaded!");
             }
-            else Log("RowAC disabled! Check your config.");
-        }
-            
-        private void Log(string Msg)
-        {
-            RowAnticheat.Log(consolePrefix + " " + Msg);
+            else R.Log("[Anticheat] disabled! Check your config.");
         }
 
         private void takeCoordsEvent(object x, ElapsedEventArgs y)
@@ -65,12 +59,12 @@ namespace RowAC
                     var player = RustAPI.GetUser(p);
                     if (player == null)
                     {
-                        Log("No user on join: " + p.id + " " + p.ipAddress);
+                        R.Log("No user on join: " + p.id + " " + p.ipAddress);
                         continue;
                     }
 
                     if (RustAPI.IsUserConnected(player))
-                        Log("NotConnected: " + RustAPI.GetUserName(player) + " - " + RustAPI.GetUserID(player));
+                        R.Log("NotConnected: " + RustAPI.GetUserName(player) + " - " + RustAPI.GetUserID(player));
 
                     if (aconf.adminCheck && RustAPI.IsUserAdmin(player))
                         continue;
@@ -104,7 +98,7 @@ namespace RowAC
                     {
                         float distance = Math.Abs(Vector2.Distance(OldPlayerCoords, CurrentPlayerCoords));
                         float speed = distance / (float)aconf.checkInterval;
-                        Log(playerName + " speed is " + speed.ToString());
+                        R.Log("[Speed] " + playerName + " speed is " + speed.ToString());
 
                         if (!playerWarnings.ContainsKey(playerID))
                             playerWarnings[playerID] = 0;
@@ -121,7 +115,7 @@ namespace RowAC
                                 BanCheater(player, "Moved with speed" + speed.ToString("F2"));
                             else if (speed > aconf.kickSpeed && aconf.kick)
                             {
-                                Log("Kick: " + playerName + ". SpeedHack. Maybe lag (Ping " + RustAPI.GetUserPing(player) + ")");
+                                R.Log("Kick: " + playerName + ". SpeedHack. Maybe lag (Ping " + RustAPI.GetUserPing(player) + ")");
                                 RustAPI.KickUser(player, NetError.Facepunch_Kick_Ban, true);
                             }
                         }
@@ -132,11 +126,11 @@ namespace RowAC
                             RustAPI.GetUserTransform(player).position = OldPlayerCoordsVector3;
                             if (speed > aconf.kickSpeed)
                                 playerWarnings[playerID]++;
-                            Log("Warning: " + playerName + " moved with speed " + speed.ToString("F2") + ". Warnings: " + warnLevel + ". Ping: " + RustAPI.GetUserPing(player));
+                            R.Log("Warning: " + playerName + " moved with speed " + speed.ToString("F2") + ". Warnings: " + warnLevel + ". Ping: " + RustAPI.GetUserPing(player));
                         }
                     }
                 }
-                catch (Exception ex) { Log(ex.ToString()); }
+                catch (Exception ex) { R.LogEx("TakeCoordsLoop", ex); }
             }
         }
 
@@ -145,7 +139,7 @@ namespace RowAC
             var p = RustAPI.GetUser(player);
             if (p == null)
             {
-                Log("Ban failed! No user. [Reason: " + reason + "]");
+                R.Log("Ban failed! No such user. [Reason: " + reason + "]");
                 return;
             }
 
@@ -156,12 +150,12 @@ namespace RowAC
 
             try
             {
-                using (StreamWriter writer = new StreamWriter(Path.Combine(RowAnticheat.rowacFolder, "Bans.txt"), true))
+                using (StreamWriter writer = new StreamWriter(Path.Combine(RowacCore.rowacFolder, "bans.txt"), true))
                     writer.WriteLine(banMsg);
             }
-            catch (Exception ex) { Log(ex.ToString()); }
+            catch (Exception ex) { R.LogEx("BanEvent", ex); }
 
-            Log("BAN: " + banMsg);
+            R.Log("[BAN] " + banMsg);
             RustAPI.KickUser(p, NetError.Facepunch_Kick_Ban, true);
         }
     }

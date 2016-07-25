@@ -9,13 +9,10 @@ using System.Threading;
 
 namespace RowAC
 {
-    internal class RowAnticheat
+    internal class RowacCore
     {
-
         internal static Dictionary<ulong, int> pingTimeTable = new Dictionary<ulong, int>();
         internal static Dictionary<ulong, string> userGuids = new Dictionary<ulong, string>();
-
-        private static StreamWriter writer;
 
         class Config
         {
@@ -28,20 +25,21 @@ namespace RowAC
         private static Config rconf = new Config();
 
         internal static string rowacFolder = @"rowac\";
-        internal static string screenshotsFolderPath = rowacFolder + @"Screenshots\";
-        internal static string taskListsFolderPath = rowacFolder + @"Tasklists\";
-        internal static string logsFolderPath = rowacFolder + @"Logs\";
-        internal static string configPath = "";
+        internal static string screenshotsFolderPath = rowacFolder + @"screenshots\";
+        internal static string taskListsFolderPath = rowacFolder + @"tasklists\";
+        internal static string logsFolderPath = rowacFolder + @"logs\";
 
         internal static Thread Anticheat;
         internal static Thread AnticheatRemote;
         internal static Thread ServerListener;
 
+        internal static RLog R = new RLog("RowAC", logsFolderPath);
+
         internal static void Init()
         {
             try
             {
-                Log("[RowAC] loading...");
+                R.Log("[RowAC] loading...");
                 
                 if (!Directory.Exists(rowacFolder))
                     Directory.CreateDirectory(rowacFolder);
@@ -52,16 +50,13 @@ namespace RowAC
                 if (!Directory.Exists(logsFolderPath))
                     Directory.CreateDirectory(logsFolderPath);
 
-                writer = new StreamWriter(Path.Combine(logsFolderPath, "rowac_" + DateTime.Now.ToString("dd_MM_yyyy") + ".txt"), true);
-                writer.AutoFlush = true;
-
-                rconf = LoadConfig<Config>(Path.Combine(RowAnticheat.rowacFolder, "rowac.json"));
+                rconf = LoadConfig<Config>(Path.Combine(RowacCore.rowacFolder, "rowac.json"));
                 if (rconf == null || !rconf.enabled)
                 {
-                    Log("Anticheat disabled!");
+                    R.Log("[RowAC] disabled! Check your config.");
                     return;
                 }
-
+                
                 AnticheatLocal ACLocal = new AnticheatLocal();
                 Anticheat = new Thread(ACLocal.Initialize); // server-side
                 Anticheat.Start();
@@ -69,15 +64,14 @@ namespace RowAC
                 AnticheatRemote = new Thread(AntiCheat); // ping checking
                 AnticheatRemote.Start();
 
-                // client-side listener
                 Listener server = new Listener();
-                ServerListener = new Thread(server.StartListening);
+                ServerListener = new Thread(server.StartListening); // client-side listener
                 ServerListener.Start();
 
-                UnityEngine.Debug.Log("RowAC loaded! Version: " + 
+                R.Log("[RowAC] loaded! Version: " + 
                     System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
             }
-            catch (Exception ex) { Log(ex.ToString()); }
+            catch (Exception ex) { R.LogEx("Init", ex); }
         }
 
         public static T LoadConfig<T>(string file)
@@ -93,14 +87,15 @@ namespace RowAC
                     return def;
                 }
             }
-            catch (Exception ex) { Log("==[LoadConfigEX] " + ex.ToString()); }
+            catch (Exception ex) { R.LogEx("LoadConfig", ex); }
             return default(T);
         }
 
         private static void AntiCheat()
         {
             Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Highest;
-            Log("RowAC thread inited");
+            R.Log("[RowAC] main thread initiated");
+
             while (true)
             {
                 try
@@ -115,28 +110,9 @@ namespace RowAC
 
                     Thread.Sleep(rconf.threadSleepTime * 1000);
                 }
-                catch (Exception ex) { Log("[LOOP_CRASH] " + ex); }
+                catch (Exception ex) { R.LogEx("LoopCrash", ex); }
             }
 
-        }
-
-        internal static void Log(string message, bool alert = true)
-        {
-            try
-            {
-                message = "[RowAC][" + DateTime.Now.ToString("HH:mm:ss") + "] " + message;
-                if (alert)
-                {
-                    UnityEngine.Debug.Log(message);
-                    Console.WriteLine(message);
-                }
-                lock (writer)
-                {
-                    writer.WriteLine(message);
-                    writer.Flush();
-                }
-            }
-            catch { }
         }
 
         internal static int GetTimeInSeconds()
@@ -157,16 +133,16 @@ namespace RowAC
                 string userName = RustAPI.GetUserName(player);
                 if (IsKickNeeded(userID))
                 {
-                    Log(string.Format("Kicked: {0}. Connection time: {1}", 
+                    R.Log(string.Format("Kicked: {0}. Connection time: {1}", 
                         userName, RustAPI.GetUserConnectionTime(player)), true); // username includes ID
                     RustAPI.KickUser(player, NetError.Facepunch_Connector_AuthException, true); // No client-side anticheat
                 }
 #if DEBUG
-                else Log(string.Format("NoKick: {0}. Connection time: {1}",
+                else R.Log(string.Format("NoKick: {0}. Connection time: {1}",
                         userName, RustAPI.GetUserConnectionTime(player)), true);
 #endif
             }
-            catch (Exception ex) { Log(ex.ToString()); }
+            catch (Exception ex) { R.LogEx("CheckPlayer", ex); }
         }
 
         private static bool IsKickNeeded(ulong ID)
@@ -179,13 +155,13 @@ namespace RowAC
 
                 int diff = GetTimeInSeconds() - pingTimeTable[ID];
 #if DEBUG
-                Log(string.Format("[IsKickNeeded] Ping time: {0}; Time: {1}; Diff: {2}", 
+                R.Log(string.Format("[IsKickNeeded] Ping time: {0}; Time: {1}; Diff: {2}", 
                     pingTimeTable[ID], GetTimeInSeconds(), diff));
 #endif
                 if (diff > rconf.maxNoPingTime)
                     return true;
             }
-            catch (Exception ex) { Log(ex.ToString()); return true; }
+            catch (Exception ex) { R.LogEx("IsKickNeeded", ex); return true; }
             return false;
         }
     }

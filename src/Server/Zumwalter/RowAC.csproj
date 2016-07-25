@@ -124,6 +124,7 @@
     <Compile Include="LitJSON\ParserToken.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="RConfig.cs" />
+    <Compile Include="RLog.cs" />
     <Compile Include="RSA.cs" />
     <Compile Include="RustAPI.cs" />
     <Compile Include="Server.cs" />
