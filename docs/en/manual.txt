@@ -1,80 +1,99 @@
-### RowAC - Rust [legacy/alpha] client-side anticheat ###
-=== Modules
-RowAC - server anticheat part
-RGuard - client anticheat part
+RowAC - Rust [legacy/alpha] client-side anticheat
+=================================================
+Modules
+-------
+- RowAC - server anticheat part
+	* RowAC + Listener - remote anticheat control
+	* Anticheat - provides protection by speedhacks and other detectable by server things.
+- RGuard - client anticheat part  
+-------
 
-=== FOR TESTERS
-# Tips
-Don't use it on your public servers! Anticheat very raw.
-Anticheat fully rewrited and needs huge testing before public release.
-Play on your personal server alone or with friends, who knows about testing.
+### FOR TESTERS
+##### Tips
+Don't use it on your public servers! Anticheat very raw.  
+Anticheat fully rewrited and needs huge testing before public release.  
+Play on your personal server alone or with friends, who knows about testing.  
 
-# What to test
+##### What to test
 - Try to join, leave, join again to server and etc
 - Try to use some hacks
 - Try to crash client or server
-- Play on local and remote servers (127.0.0.1 and not)
+- Play on local and remote servers (127.0.0.1 and not).
 
-Report me all founded bugs and attach logs (client: logs in root game folder; server: server\ACLog\Logs\)
-I interested in stability and safety of your servers first of all.
+Report me all founded bugs and attach logs (client: logs in root game folder; server: `server\rowac\logs\`)  
+I interested in stability and safety of servers first of all.  
 
-# What untested by me at all:
-- Manipulations with join/leave to server
-- Speedhack/flyhack/teleporting protect
-- Compatibility with server mods
-- Not tested on pirate clients/servers
-- Playing with more than one client or player on server
+##### What need to test first of all:
+- Capture normal player speed (without cheats)
+- Speedhack/flyhack/teleporting protect (with using your captured data)
+- Not tested on pirated clients/servers
+- Playing with more than one client or player on server.
 
-# What you should avoid and shouldn't afraid:
-- Config system. I'll rewrite it soon, because it's trash
-- Logging system. Same.
-- Problems with automatic punishes for speedhacking/etc - not tested and it needs some improvements
-
-# Also - performance of client/server
+##### Also - performance of client/server
 Tell me, if you have problems with it
 
-=== Features
-Anticheat can:
+--------------------------------
+### Features that anticheat can:
 - Kick people without anticheat
 - Take screenshots
 - Take players tasklists
 - Kick/ban players with speedhacks, teleports, flyhacks
+- Client-server traffic encryption
 - Works with Steam version (legal)
 - Works with pirated version.
-- Works with server modifications (tested with Fougerite)
+- Works with server modifications (tested with Fougerite, a bit with Oxide).
 
-Anticheat DON'T provides protection by (at least now):
+
+### Anticheat DON'T provides protection by (at least now):
 - hunger hack
 - radiation hack
 - calorie hack
 - server crash hack
 - uLink server flood
-- e.t.c. like this.
-Use Fougerite (server modification - fougerite.com) to prevent it.
-You SHOULD use some server modification, because vanilla rust servers weak by itself, especially legacy.
+- e.t.c. like this.  
 
-=== How to install
-# server.legacy
+Use Fougerite (server modification - fougerite.com) to prevent it.  
+You SHOULD use some server modification, because vanilla rust servers weak by itself, especially legacy.  
+
+------------------
+How to install
+------------------
+**server.legacy**
 1. Copy RowAC.dll (and RowAC.pdb, if you have) to rust_legacy\rust_server_Data\Managed\
 2. Copy RowPatcher.exe and Mono.Cecil.dll to rust_legacy\rust_server_Data\Managed\
 3. BACKUP YOUR CLEAR Assembly-CSharp.dll!
 4. [DON'T PATCH, IF YOUR LIBs ALREADY PATCHED!!!] Launch patcher (RowPatcher.exe), and do what it asks.
 5. Copy RowAC.ini to rust_legacy\ACLog\ (create, if it doesn't exist) and configure it how you like.
 6. Open port 28165 (at the moment you can't change it, sorry) in your firewall.
-7. Now you can start server.
+7. [OPTIONAL] now you can obfuscate your server anticheat dlls with `tools\ConfuserEx.bat`
+8. Now you can start server.
 
-# client.legacy
+**client.legacy**
 1. Copy RGuard.dll (and RGuard.pdb, if you have) to Rust\rust_Data\Managed\
 2. Copy RowPatcher.exe and Mono.Cecil.dll to Rust\rust_Data\Managed\
 3. BACKUP YOUR CLEAR Assembly-CSharp.dll!
 4. [DON'T PATCH, IF YOUR LIBs ALREADY PATCHED!!!] Launch patcher (RowPatcher.exe), and do what it asks.
-5. Now you can play.
+5. [OPTIONAL, RECOMMENDED] now you can obfuscate your client anticheat dlls with `tools\ConfuserEx.bat`
+6. Now you can play.
 
-=== Timings
-Ping - every ~10 sec
-No anticheat kicking - ~60 sec
-Screenshots - every ~90 sec
-Tasklist - every ~300 sec
+--------------
+Additional client/server security [OPTIONAL, RECOMMENDED]
+--------------
+**= RSA**  
+RSA-Keys hardcoded into client and server.  
+You can change them (check RSA.cs) or use mine.  
+**= Obfuscation**  
+Use `tools\ConfuserEx.bat` to obfuscate client and/or server dlls.  
+**= Screenshots quality**  
+Hardcoded as 40%. You can change it in client project.  
 
-=== Ask me: rowneg@bk.ru; skype: azzzmodan; riketta.com
-If you need help, report bug or want some features.
+----------------------------------------------------------
+**Default client timings (right now hardcoded in client)**  
+- Ping - every ~10 sec
+- No anticheat kicking - ~60 sec
+- Screenshots - every ~90 sec
+- Tasklist - every ~300 sec  
+
+---
+Ask me: rowneg@bk.ru; skype: azzzmodan; riketta.com  
+If you need help, report bug or want some features.  
