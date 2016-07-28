@@ -1,13 +1,10 @@
 Known:
 - On client and server after quit process may continue to work.
-	No correct thread finishing. Check taskmanager and kill it.
-- DDoS can kill it. Like connection spam.
-- Appcrash on screenshot saving
-- Receiver sometimes cutting request (mostly long requests cutteds)
+	No correct thread finishing. Check taskmanager and kill it. Problem in Listener (check it).
 - Client sends information in same thread
-- If server launched on June 22 (for ex), and works for one day, it still write log to June 22 file
 - "Null"s in players tasklists
 
 Possible:
 - if join to server before full initialization (before "Server Initialized" message), then error spam may start.
 	Don't try to join to server before full start.
+- DDoS can kill it. Like connection spam.
