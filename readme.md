@@ -1,14 +1,14 @@
-### === RowAC - Rust [legacy/alpha] client-side anticheat ===
+# === RowAC - Rust [legacy/alpha] client-side anticheat ===
 -------------------------------------------------------------
 # Please, read documents from `docs/en/` folder!
 ##### There you can find:  
 - **manual.txt** - "how to" build and install, also full description of project
 - **protocol.txt** - description of protocol
-- **bugs.txt** - known bugs
+- **bugs.txt** - known bugs  
+
 ---
 
-# Features
-##### Anticheat can:
+# What can anticheat:
 - Kick people without anticheat
 - Take screenshots
 - Take players tasklists
